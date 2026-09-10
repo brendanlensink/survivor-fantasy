@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "border-l-4",
+        "files": [
+          "src/components/Leaderboard.tsx"
+        ],
+        "createdAt": "2026-09-10T19:54:11.610Z",
+        "reason": "user confirmed: reviewed multiple times this session, kept as the standings list's intentional rank-accent; documented in DESIGN.md Shapes + Do's/Don'ts as legacy, not to be extended"
+      }
+    ]
+  }
+}

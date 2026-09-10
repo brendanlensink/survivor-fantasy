@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-10T12:35:00.000Z",
+  "title": "Design System: Survivor Fantasy",
+  "extensions": {
+    "colorMeta": {
+      "ember": {
+        "role": "primary",
+        "displayName": "Torch Ember",
+        "canonical": "#e8791a",
+        "tonalRamp": ["#392513", "#5f3d20", "#85562d", "#ab6e3a", "#c58854", "#d2a27a", "#e5cab3", "#f9f2ec"]
+      },
+      "blood": {
+        "role": "secondary",
+        "displayName": "Tribal Blood",
+        "canonical": "#b23a1f",
+        "tonalRamp": ["#361c16", "#5b2f25", "#7f4134", "#a35442", "#bd6e5c", "#cb8e80", "#e2beb6", "#f8efed"]
+      },
+      "parchment": {
+        "role": "neutral",
+        "displayName": "Parchment Cream",
+        "canonical": "#f0e6d2",
+        "tonalRamp": ["#322a1b", "#53462d", "#74623e", "#957e50", "#af986a", "#c1af8b", "#dbd1bd", "#f6f4ee"]
+      },
+      "parchment-dim": {
+        "role": "neutral",
+        "displayName": "Parchment Dim",
+        "canonical": "#8f8270",
+        "note": "Tuned from #8a7d6a this session to clear WCAG AA (4.58:1) against wood-800. Do not darken back."
+      },
+      "wood-900": { "role": "neutral", "displayName": "Camp Char", "canonical": "#1a1410" },
+      "wood-800": { "role": "neutral", "displayName": "Card Char", "canonical": "#211a13" },
+      "tribe-teal": {
+        "role": "tertiary",
+        "displayName": "Tribe Teal",
+        "canonical": "#3d6b8a",
+        "tonalRamp": ["#1d282f", "#31434f", "#455d6e", "#58788d", "#7291a7", "#91aaba", "#c0ced8", "#eff3f5"]
+      },
+      "tribe-moss": {
+        "role": "tertiary",
+        "displayName": "Tribe Moss",
+        "canonical": "#7a8a3d",
+        "tonalRamp": ["#2b2f1d", "#484f31", "#656e45", "#828d58", "#9ca772", "#b2ba91", "#d3d8c0", "#f4f5ef"]
+      },
+      "tribe-gold": {
+        "role": "tertiary",
+        "displayName": "Tribe Gold",
+        "canonical": "#c9a63d",
+        "tonalRamp": ["#332d19", "#554b2a", "#77683b", "#9a864c", "#b3a065", "#c4b588", "#ddd5bb", "#f7f4ee"]
+      },
+      "tribe-violet": {
+        "role": "tertiary",
+        "displayName": "Tribe Violet",
+        "canonical": "#7a4a8e",
+        "tonalRamp": ["#291f2e", "#45334d", "#61476b", "#7c5c8a", "#9675a3", "#ad94b8", "#d0c2d6", "#f3f0f5"],
+        "note": "Nudged from #8a5a9e this session for WCAG AA contrast."
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display / Headline", "purpose": "Page titles and the nav wordmark, uppercase, tracking-wide, never bolded." },
+      "title": { "displayName": "Title", "purpose": "Section headings within a page (\"Your Picks\", \"Draft\")." },
+      "body": { "displayName": "Body", "purpose": "The dominant size for labels, list items, table cells, helper copy." },
+      "label": { "displayName": "Label", "purpose": "Table headers, captions, tribe/status tags — text-parchment-dim, often tracked." },
+      "mono": { "displayName": "Mono Numerals", "purpose": "Any score, stat, or point value, for tabular column alignment." }
+    },
+    "shadows": [
+      { "name": "overlay", "value": "0 20px 25px -5px rgba(0,0,0,0.4), 0 8px 10px -6px rgba(0,0,0,0.4)", "purpose": "Mobile nav dropdown — the one UI-authored shadow, used because it must float above page content." },
+      { "name": "google-button", "value": "0 1px 2px rgba(0,0,0,0.15)", "purpose": "Sign-in button only, matching Google's own brand button convention rather than this system's." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action on a screen (Save picks, admin Save).",
+      "html": "<button class=\"ds-btn-primary\">Save picks</button>",
+      "css": ".ds-btn-primary { background: #e8791a; color: #120d09; padding: 6px 16px; border-radius: 4px; border: none; font-size: 14px; font-weight: 500; transition: background 0.15s; cursor: pointer; } .ds-btn-primary:hover { background: #f0954a; } .ds-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; } .ds-btn-primary:focus-visible { outline: 2px solid #e8791a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Toggle Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Spoiler-mode toggle and secondary nav actions. Shows a disabled/pending state during its server round-trip.",
+      "html": "<button class=\"ds-btn-ghost\">Spoilers on — turn off</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #8f8270; border: 1px solid #3a2f22; border-radius: 4px; padding: 4px 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Oswald', sans-serif; transition: color 0.15s; cursor: pointer; } .ds-btn-ghost:hover { color: #e8791a; } .ds-btn-ghost:disabled { opacity: 0.6; cursor: wait; } .ds-btn-ghost:focus-visible { outline: 2px solid #e8791a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Tribe Badge",
+      "kind": "chip",
+      "refersTo": "tribe-badge",
+      "description": "Deterministic per-tribe color pill; the dot variant is aria-hidden and always paired with visible tribe-name text.",
+      "html": "<span class=\"ds-tribe-badge\" style=\"background:#3d6b8a;color:#f0e6d2\">Tribe B</span>",
+      "css": ".ds-tribe-badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }"
+    },
+    {
+      "name": "Contestant Picker Card",
+      "kind": "card",
+      "refersTo": "contestant-card",
+      "description": "Draft flow's selectable roster card. A native checkbox (visually hidden) drives real form/keyboard semantics; the card's border/background carries the visual state.",
+      "html": "<label class=\"ds-picker-card ds-picker-card--selected\"><input type=\"checkbox\" class=\"ds-sr-only\" checked /><span class=\"ds-picker-dot\" style=\"background:#e8791a\"></span><span class=\"ds-picker-name\">Contestant 1</span><span class=\"ds-picker-check\">&#10003;</span></label>",
+      "css": ".ds-picker-card { display: flex; align-items: center; gap: 8px; border-radius: 6px; border: 1px solid #3a2f22; background: rgba(26,20,16,0.4); color: #8f8270; padding: 10px; font-size: 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s; } .ds-picker-card--selected { border-color: #e8791a; background: #2a2118; color: #f0e6d2; } .ds-picker-dot { width: 8px; height: 8px; border-radius: 9999px; flex-shrink: 0; } .ds-picker-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ds-picker-check { color: #e8791a; flex-shrink: 0; } .ds-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }"
+    },
+    {
+      "name": "Nav Link (desktop, active)",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Top-bar nav link. Active page gets an ember underline and text color, no filled background — kept light for a top-level row.",
+      "html": "<a href=\"#\" class=\"ds-nav-link ds-nav-link--active\" aria-current=\"page\">Draft</a>",
+      "css": ".ds-nav-link { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; font-size: 14px; color: #8f8270; text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; transition: color 0.15s, border-color 0.15s; } .ds-nav-link:hover { color: #e8791a; } .ds-nav-link--active { color: #e8791a; border-bottom-color: #e8791a; } .ds-nav-link:focus-visible { outline: 2px solid #e8791a; outline-offset: 2px; }"
+    },
+    {
+      "name": "Spoiler Banner",
+      "kind": "custom",
+      "refersTo": "spoiler-banner",
+      "description": "Full-width solid-ember bar — the one surface where the accent fills a large area, because it must be impossible to miss.",
+      "html": "<div class=\"ds-spoiler-banner\"><span>🔒 Spoiler-free mode is on</span><button class=\"ds-spoiler-toggle\">Turn off</button></div>",
+      "css": ".ds-spoiler-banner { background: #e8791a; color: #120d09; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 16px; font-size: 14px; font-weight: 500; } .ds-spoiler-toggle { background: none; border: none; color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; } .ds-spoiler-toggle:hover { text-decoration: none; } .ds-spoiler-toggle:focus-visible { outline: 2px solid #120d09; outline-offset: 2px; }"
+    },
+    {
+      "name": "Stat Table Row",
+      "kind": "custom",
+      "refersTo": "stat-table",
+      "description": "Hairline-divided data row with mono numerals; jargon headers pair a native <abbr> tooltip with a legend line below the table.",
+      "html": "<table class=\"ds-stat-table\"><thead><tr><th>Ep</th><th class=\"ds-num\"><abbr title=\"Challenge Wins\">ChW</abbr></th><th class=\"ds-num\">Points</th></tr></thead><tbody><tr><td>1</td><td class=\"ds-num\">1</td><td class=\"ds-num ds-highlight\">8.0</td></tr></tbody></table>",
+      "css": ".ds-stat-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; } .ds-stat-table th { color: #8f8270; font-size: 12px; font-weight: 500; padding: 8px 8px 8px 0; border-bottom: 1px solid #3a2f22; } .ds-stat-table td { padding: 6px 8px 6px 0; border-bottom: 1px solid #2a2118; color: #f0e6d2; } .ds-num { text-align: right; font-family: ui-monospace, monospace; color: #c9bfae; } .ds-highlight { color: #e8791a; font-weight: 500; } .ds-stat-table abbr { text-decoration: underline dotted; cursor: help; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Tribal Council",
+    "overview": "The app is lit like a night tribal council: a near-black wood floor, one live torch (ember orange), and pale parchment for everything that needs to be read. It sits over a fixed, blurred photo of a Fiji beach — the world the app is about, kept out of focus so it never competes with the interface on top of it.\n\nThe system is deliberately utilitarian. Color is spent on one thing at a time — the active nav link's underline, a selected draft card's border, the one primary action on a screen — never spread across a page decoratively. Display type (Oswald, uppercase, tall and condensed even at its default weight) is reserved for headings, labels, and short bursts of ceremony; everything a player actually reads at length stays in a plain, compact sans body face. Flat by default: shadows appear only where something must visually float above the page (a dropdown menu), not as generic card depth.\n\nConfirmed visual rejection: no second accent color competing with ember, no drop shadows as default card treatment, no \"hero metric\" widgets (a countdown is a sentence fragment, not an isolated number-and-label tile).",
+    "keyCharacteristics": [
+      "One accent color (ember) used sparingly and consistently for \"this is active / selected / primary\"",
+      "Display type is condensed-caps Oswald at regular weight, not bold — the letterforms carry the weight, not the font-weight property",
+      "Flat surfaces, hairline borders for separation, shadow reserved for floating overlays only",
+      "A fixed, blurred photographic background behind an otherwise flat UI — atmosphere without competing for attention",
+      "Numerals that matter (points, stats) always render in a monospace face for tabular alignment"
+    ],
+    "rules": [
+      { "name": "The One Ember Rule", "body": "The accent color marks exactly one thing per view: the active nav link, the selected card, the primary button. If a screen needs a second color to feel finished, that's a sign the hierarchy is unresolved, not a reason to add a color.", "section": "colors" },
+      { "name": "The Mono Numerals Rule", "body": "Any number that represents a score, stat, or point value renders in the monospace stack (font-mono), never the body sans face — it's what makes columns of stats actually line up and read as data.", "section": "typography" },
+      { "name": "The Flat-Unless-Floating Rule", "body": "A surface gets a shadow only when it needs to read as detached from the page (a dropdown, an overlay) — never as decoration on an ordinary card.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do spend the ember accent on exactly one thing per view — an active link, a selected card, a primary button (The One Ember Rule).",
+      "Do keep display type (Oswald, uppercase) to headings, labels, and the rank numeral; leave body copy in the plain sans stack at text-sm.",
+      "Do render any score, stat, or point value in font-mono for tabular alignment (The Mono Numerals Rule).",
+      "Do keep cards and panels flat at rest; reserve shadow for things that must visually float above the page (The Flat-Unless-Floating Rule).",
+      "Do build any grid of cards/tiles as a 1 → 2 → 3 responsive progression (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3), never a fixed column count.",
+      "Do treat spoiler-free mode as a constraint on every new surface that could show an episode outcome, not just the standings page — hide behind a lock icon or placeholder copy, don't just omit the check."
+    ],
+    "donts": [
+      "Don't add a colored left/right border as a card accent — the project's own detector flags this as a common AI-slop tell; the one existing instance (Leaderboard.tsx) was reviewed and kept as legacy, not license to add more.",
+      "Don't introduce a second saturated accent color competing with ember for attention; blood-red stays reserved for negative/elimination state only.",
+      "Don't build a \"hero metric\" tile (big isolated number, small label underneath) — write counts and countdowns as inline sentence fragments instead, as the Season Status panel does.",
+      "Don't bold the display font for emphasis — Oswald's condensed letterforms already carry the weight at regular (400); reach for size or the ember accent instead."
+    ]
+  }
+}
