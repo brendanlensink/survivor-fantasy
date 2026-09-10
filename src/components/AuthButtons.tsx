@@ -54,10 +54,10 @@ export default function AuthButtons({
       <span className="w-7 h-7 rounded-full bg-ember text-wood-950 font-display flex items-center justify-center text-xs shrink-0">
         {initials(displayName)}
       </span>
-      <span className="text-parchment-dim">{displayName}</span>
+      <span className="text-parchment-dim truncate">{displayName}</span>
       <button
         onClick={() => signOut()}
-        className="text-parchment-dim hover:text-ember transition-colors ml-1"
+        className="text-parchment-dim hover:text-ember transition-colors ml-auto pl-2 shrink-0"
         title="Sign out"
       >
         <svg viewBox="0 0 20 20" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5">
