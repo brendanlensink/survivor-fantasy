@@ -1,4 +1,3 @@
-import TorchIcon from "./TorchIcon";
 import EmptyState from "./EmptyState";
 
 interface Entry {
@@ -53,7 +52,16 @@ export default function Leaderboard({
               <span className="block font-medium truncate">{entry.teamName}</span>
               <span className="block text-sm text-parchment-dim truncate">{entry.playerName}</span>
             </span>
-            {!spoilerFree && i === 0 && <TorchIcon className="w-4 h-4 text-ember shrink-0" />}
+            {!spoilerFree && i === 0 && (
+              <span className="shrink-0" aria-hidden="true">
+                🏆
+              </span>
+            )}
+            {!spoilerFree && displayEntries.length > 1 && i === displayEntries.length - 1 && (
+              <span className="shrink-0" aria-hidden="true">
+                🏝️
+              </span>
+            )}
             <span
               className={`font-display text-xl tabular-nums shrink-0 ${
                 !spoilerFree && entry.points < 0 ? "text-blood" : "text-ember"
