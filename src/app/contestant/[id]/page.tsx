@@ -110,7 +110,9 @@ export default async function ContestantPage({ params }: { params: { id: string 
                 <td className="py-1.5 px-2 text-center text-parchment-muted">{r.stat.wentToTribal ? "✓" : ""}</td>
                 <td className="py-1.5 px-2 text-center text-blood">{r.stat.wasBooted ? "✓" : ""}</td>
                 <td className="py-1.5 px-2 text-center text-ember">{r.stat.wasImmune ? "✓" : ""}</td>
-                <td className="py-1.5 pl-3 text-right font-mono text-ember">{r.points.toFixed(1)}</td>
+                <td className={`py-1.5 pl-3 text-right font-mono ${r.points < 0 ? "text-blood" : "text-ember"}`}>
+                  {r.points.toFixed(1)}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -120,7 +122,9 @@ export default async function ContestantPage({ params }: { params: { id: string 
                 <td colSpan={9} className="py-2 pr-3 text-right text-parchment-dim">
                   Total
                 </td>
-                <td className="py-2 pl-3 text-right font-mono font-medium text-ember">{total.toFixed(1)}</td>
+                <td className={`py-2 pl-3 text-right font-mono font-medium ${total < 0 ? "text-blood" : "text-ember"}`}>
+                  {total.toFixed(1)}
+                </td>
               </tr>
             </tfoot>
           )}

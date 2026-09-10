@@ -54,7 +54,11 @@ export default function Leaderboard({
               <span className="block text-sm text-parchment-dim truncate">{entry.playerName}</span>
             </span>
             {!spoilerFree && i === 0 && <TorchIcon className="w-4 h-4 text-ember shrink-0" />}
-            <span className="font-display text-xl text-ember tabular-nums shrink-0">
+            <span
+              className={`font-display text-xl tabular-nums shrink-0 ${
+                !spoilerFree && entry.points < 0 ? "text-blood" : "text-ember"
+              }`}
+            >
               {spoilerFree ? "🔒" : entry.points.toFixed(1)}
             </span>
           </a>

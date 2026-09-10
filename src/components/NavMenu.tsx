@@ -111,7 +111,7 @@ export default function NavMenu({
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
-        className="md:hidden ml-auto text-parchment p-1"
+        className="md:hidden relative z-20 ml-auto text-parchment p-1"
       >
         <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.75">
           {open ? (
@@ -123,30 +123,37 @@ export default function NavMenu({
       </button>
 
       {open && (
-        <div className="md:hidden absolute left-0 right-0 top-full bg-wood-950 border-t border-ember/60 shadow-xl px-3 py-3 flex flex-col gap-1 z-20 max-h-[calc(100vh-4rem)] overflow-y-auto">
-          <div className="pb-2 flex flex-col gap-3 [&>*]:w-full [&>button]:w-full [&>button]:justify-start [&>button]:py-3">
-            <AuthButtons user={user} />
-            {!spoilerFree && <SpoilerToggle />}
-          </div>
+        <>
+          <div
+            className="md:hidden fixed inset-0 bg-black/50 z-10"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="md:hidden absolute left-0 right-0 top-full bg-wood-950 border-t border-ember/60 shadow-xl px-3 py-3 flex flex-col gap-1 z-20 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div className="pb-2 flex flex-col gap-3 [&>*]:w-full [&>button]:w-full [&>button]:justify-start [&>button]:py-3">
+              <AuthButtons user={user} />
+              {!spoilerFree && <SpoilerToggle />}
+            </div>
 
-          {links.map((l) => {
-            const active = l.href === "/" ? pathname === "/" : pathname?.startsWith(l.href);
-            const Icon = l.icon;
-            return (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 rounded-md px-3 py-3 font-display uppercase tracking-wide text-sm transition-colors ${
-                  active ? "bg-wood-800 text-ember" : "text-parchment-dim hover:bg-wood-900 hover:text-ember"
-                }`}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                {l.label}
-              </a>
-            );
-          })}
-        </div>
+            {links.map((l) => {
+              const active = l.href === "/" ? pathname === "/" : pathname?.startsWith(l.href);
+              const Icon = l.icon;
+              return (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center gap-3 rounded-md px-3 py-3 font-display uppercase tracking-wide text-sm transition-colors ${
+                    active ? "bg-wood-800 text-ember" : "text-parchment-dim hover:bg-wood-900 hover:text-ember"
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  {l.label}
+                </a>
+              );
+            })}
+          </div>
+        </>
       )}
     </>
   );

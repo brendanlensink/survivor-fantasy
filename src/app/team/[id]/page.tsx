@@ -93,7 +93,11 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
                       </td>
                     );
                   })}
-                  <td className="py-2 pl-3 text-right font-mono font-medium text-ember">
+                  <td
+                    className={`py-2 pl-3 text-right font-mono font-medium ${
+                      (totals[tc.contestantId] ?? 0) < 0 ? "text-blood" : "text-ember"
+                    }`}
+                  >
                     {(totals[tc.contestantId] ?? 0).toFixed(1)}
                   </td>
                 </tr>
