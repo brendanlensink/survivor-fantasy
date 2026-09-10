@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { tribeColor } from "@/lib/tribeColors";
+import TorchIcon from "./TorchIcon";
 
 interface Contestant {
   id: string;
@@ -90,9 +91,10 @@ export default function DraftForm({
         <p className="text-ember text-sm mb-4 font-medium">Draft is locked — picks can no longer be changed.</p>
       )}
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {tribes.map((tribe) => {
           const color = tribeColor(tribe);
+          const picked = countByTribe(tribe);
           return (
             <div key={tribe} className="bg-wood-800 rounded p-3">
               <h3 className="text-xs font-medium uppercase tracking-wide text-parchment-dim mb-2 flex items-center gap-2">
@@ -101,25 +103,54 @@ export default function DraftForm({
                   style={{ backgroundColor: color.bg }}
                   aria-hidden="true"
                 />
-                {tribe} ({countByTribe(tribe)}/{PICKS_PER_TRIBE})
+                <span className="flex-1">{tribe}</span>
+                <span className="flex items-center gap-0.5" aria-hidden="true">
+                  {Array.from({ length: PICKS_PER_TRIBE }).map((_, i) => (
+                    <TorchIcon key={i} className={`w-3 h-3 ${i < picked ? "text-ember" : "text-wood-600"}`} />
+                  ))}
+                </span>
+                <span className="sr-only">
+                  {picked} of {PICKS_PER_TRIBE} picked
+                </span>
               </h3>
-              <ul className="space-y-1 text-sm">
+              <ul className="space-y-1.5 text-sm">
                 {contestants
                   .filter((c) => c.tribe === tribe)
-                  .map((c) => (
-                    <li key={c.id}>
-                      <label className="flex items-center gap-2 text-parchment">
-                        <input
-                          type="checkbox"
-                          className="accent-ember"
-                          disabled={locked}
-                          checked={selected.has(c.id)}
-                          onChange={() => toggle(c.id, c.tribe)}
-                        />
-                        {c.name}
-                      </label>
-                    </li>
-                  ))}
+                  .map((c) => {
+                    const isSelected = selected.has(c.id);
+                    return (
+                      <li key={c.id}>
+                        <label
+                          className={`flex items-center gap-2 rounded-md border px-2.5 py-2.5 transition-colors ${
+                            locked ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+                          } ${
+                            isSelected
+                              ? "border-ember bg-wood-700 text-parchment"
+                              : "border-wood-600 bg-wood-900/40 text-parchment-dim hover:border-wood-500"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            disabled={locked}
+                            checked={isSelected}
+                            onChange={() => toggle(c.id, c.tribe)}
+                          />
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{ backgroundColor: color.bg }}
+                            aria-hidden="true"
+                          />
+                          <span className="flex-1 truncate">{c.name}</span>
+                          {isSelected && (
+                            <span className="text-ember shrink-0" aria-hidden="true">
+                              ✓
+                            </span>
+                          )}
+                        </label>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           );
@@ -179,6 +210,9 @@ export default function DraftForm({
         <p className="text-parchment-dim text-sm mt-2">
           Pick exactly {PICKS_PER_TRIBE} from every tribe and answer both tiebreakers to save.
         </p>
+      )}
+      {complete && !locked && status.kind !== "saving" && status.kind !== "ok" && (
+        <p className="text-ember text-sm mt-2">Your roster is set — ready to save.</p>
       )}
 
       {status.kind === "error" && <p className="text-blood text-sm mt-2">{status.message}</p>}

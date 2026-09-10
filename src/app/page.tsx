@@ -1,5 +1,6 @@
 import Leaderboard from "@/components/Leaderboard";
 import PageHeading from "@/components/PageHeading";
+import SeasonStatus from "@/components/SeasonStatus";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -7,16 +8,24 @@ import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
 import { rankLeaderboard } from "@/lib/leaderboard";
 import { getActualSeasonOutcome } from "@/lib/seasonOutcome";
 import { isSpoilerFreeMode } from "@/lib/spoilerMode";
+import { draftLockAt, isDraftLocked } from "@/lib/draftLock";
 
 // Server component: fetch + score at request time. Fine for a friend-group
 // scale app; add caching/ISR later if it matters.
 export default async function HomePage() {
-  const [stats, teams, { actualWinnerId, actualIdolsPlayed }] = await Promise.all([
+  const [stats, teams, { actualWinnerId, actualIdolsPlayed }, airedEpisodes] = await Promise.all([
     db.episodeStat.findMany({ include: { episode: true } }),
     db.team.findMany({
       include: { player: true, contestants: { include: { contestant: true } } },
     }),
     getActualSeasonOutcome(),
+    // Episodes that have at least one stat row recorded, i.e. have actually
+    // aired and been scored — newest first.
+    db.episode.findMany({
+      where: { stats: { some: {} } },
+      orderBy: { number: "desc" },
+      take: 1,
+    }),
   ]);
 
   const statLines: StatLine[] = stats.map((s) => ({
@@ -49,10 +58,22 @@ export default async function HomePage() {
   const ranked = rankLeaderboard(leaderboard, actualWinnerId, actualIdolsPlayed);
   const spoilerFree = isSpoilerFreeMode();
 
+  const latestEpisode = airedEpisodes[0] ?? null;
+  const nextEpisodeAt =
+    latestEpisode?.airDate != null ? new Date(latestEpisode.airDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null;
+
   return (
     <div>
       <PageHeading>League Standings</PageHeading>
-      <Leaderboard entries={ranked} spoilerFree={spoilerFree} />
+      <div className="grid md:grid-cols-[1fr_280px] gap-6 items-start">
+        <Leaderboard entries={ranked} spoilerFree={spoilerFree} />
+        <SeasonStatus
+          locked={isDraftLocked()}
+          lockAt={draftLockAt()}
+          latestEpisodeNumber={latestEpisode?.number ?? null}
+          nextEpisodeAt={nextEpisodeAt}
+        />
+      </div>
     </div>
   );
 }
