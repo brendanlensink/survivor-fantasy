@@ -32,8 +32,10 @@ function initials(name: string) {
 
 export default function AuthButtons({
   user,
+  children,
 }: {
   user: { name: string | null; email: string | null } | null;
+  children?: React.ReactNode;
 }) {
   if (!user) {
     return (
@@ -57,10 +59,11 @@ export default function AuthButtons({
       >
         {initials(displayName)}
       </span>
-      <span className="text-parchment-dim truncate">{displayName}</span>
+      <span className="text-parchment-dim truncate flex-1 min-w-0">{displayName}</span>
+      {children}
       <button
         onClick={() => signOut()}
-        className="text-parchment-dim hover:text-ember transition-colors ml-auto pl-2 shrink-0"
+        className="text-parchment-dim hover:text-ember transition-colors border border-wood-600 rounded px-2 py-1 shrink-0"
         title="Sign out"
       >
         <svg viewBox="0 0 20 20" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5">

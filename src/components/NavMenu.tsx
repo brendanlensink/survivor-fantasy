@@ -130,9 +130,8 @@ export default function NavMenu({
             aria-hidden="true"
           />
           <div className="md:hidden absolute left-0 right-0 top-full bg-wood-950 border-t border-ember/60 shadow-xl px-3 py-3 flex flex-col gap-1 z-20 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <div className="pb-2 flex flex-col gap-3 [&>*]:w-full [&>button]:w-full [&>button]:justify-start [&>button]:py-3">
-              <AuthButtons user={user} />
-              {!spoilerFree && <SpoilerToggle />}
+            <div className="pb-2 flex flex-col gap-3 [&>*]:w-full">
+              <AuthButtons user={user}>{!spoilerFree && <SpoilerToggle />}</AuthButtons>
             </div>
 
             {links.map((l) => {
