@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Contestant {
+  id        String   @id @default(cuid())
+  name      String
+  tribe     String   // starting tribe name, e.g. "Uli" — drives the "2 per tribe" draft rule
+  photoUrl  String?
+  isEliminated Boolean @default(false)
+  bootedEp  Int? // episode number they were voted out, null if still in
+  isWinner  Boolean @default(false) // set manually once the finale airs — drives the winner-pick tiebreaker
+
+  stats     EpisodeStat[]
+  teams     TeamContestant[]
+  winnerPredictedBy Team[] @relation("WinnerPrediction")
+
+  createdAt DateTime @default(now())
+}
+
+model Episode {
+  id          String   @id @default(cuid())
+  number      Int      @unique
+  title       String?
+  airDate     DateTime?
+
+  stats       EpisodeStat[]
+
+  createdAt   DateTime @default(now())
+}
+
+// Raw scraped numbers, one row per contestant per episode.
+// Kept separate from computed fantasy points so scoring can be
+// re-run retroactively without re-scraping.
+model EpisodeStat {
+  id            String   @id @default(cuid())
+  contestantId  String
+  episodeId     String
+
+  challengeWins       Float @default(0) // fractional, per TDT's ChW convention
+  challengeAppearances Float @default(0)
+  votesForBootee      Int   @default(0)
+  votesAgainstPlayer  Int   @default(0)
+  idolFound           Boolean @default(false)
+  idolPlayed          Boolean @default(false)
+  wentToTribal        Boolean @default(false)
+  wasBooted           Boolean @default(false)
+  wasImmune           Boolean @default(false)
+
+  rawSource     String? // store the raw scraped row (JSON) for debugging
+
+  contestant    Contestant @relation(fields: [contestantId], references: [id])
+  episode       Episode    @relation(fields: [episodeId], references: [id])
+
+  createdAt     DateTime @default(now())
+
+  @@unique([contestantId, episodeId])
+}
+
+model Player {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?  @unique
+
+  // Every Player is a real signed-in person now (Google sign-in) — the
+  // Player row is auto-created on first login (see lib/auth.ts).
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  teams     Team[]
+
+  createdAt DateTime @default(now())
+}
+
+// Standard NextAuth (Auth.js v4) Prisma adapter schema — see
+// https://authjs.dev/getting-started/adapters/prisma. Kept separate from
+// Player so app-domain data (roster, display name) isn't tangled with
+// auth-provider bookkeeping.
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  accounts      Account[]
+  sessions      Session[]
+  player        Player?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? // SQLite has no TEXT column-size attribute to opt into — plain String is fine here
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  playerId  String
+
+  // Draft tiebreakers, required to complete a submission — see
+  // src/app/api/draft/route.ts. Both resolve at/near season end and are
+  // numeric-or-exact-match, so they're unlikely to tie against each other.
+  winnerPredictionId String?
+  winnerPrediction   Contestant? @relation("WinnerPrediction", fields: [winnerPredictionId], references: [id])
+  idolsPlayedGuess   Int?
+
+  player       Player @relation(fields: [playerId], references: [id])
+  contestants  TeamContestant[]
+
+  createdAt DateTime @default(now())
+}
+
+// Join table: which contestants are on which team's roster
+model TeamContestant {
+  id            String   @id @default(cuid())
+  teamId        String
+  contestantId  String
+  draftedAt     DateTime @default(now())
+
+  team          Team       @relation(fields: [teamId], references: [id])
+  contestant    Contestant @relation(fields: [contestantId], references: [id])
+
+  @@unique([teamId, contestantId])
+}
+
+// Config for point values, so scoring logic reads from data, not hardcoded ifs
+model ScoringRule {
+  id        String  @id @default(cuid())
+  key       String  @unique // e.g. "challengeWin", "idolFound", "votedOutCorrectly"
+  points    Float
+  label     String?
+}

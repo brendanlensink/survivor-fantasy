@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fixed, blurred beach photo behind everything. Sized past the viewport
+   edges (inset < -blur radius) so the blur has real image content to
+   sample from at the true screen edges instead of fading to transparent. */
+.fiji-bg {
+  position: fixed;
+  inset: -60px;
+  z-index: -20;
+  background-image: url("/images/fiji-beach.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px) brightness(0.6) saturate(1.15);
+}
+
+/* Dark wood-grain scrim over the photo so parchment text stays legible —
+   same texture as before, just semi-transparent now that there's a photo
+   underneath instead of a flat color. */
+.fiji-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background-color: rgba(18, 13, 9, 0.55);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232, 121, 26, 0.1), transparent),
+    repeating-linear-gradient(
+      100deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
