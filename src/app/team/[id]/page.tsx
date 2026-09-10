@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { scoreEpisode, scoreSeason, type StatLine } from "@/lib/scoring";
 import { isDraftLocked } from "@/lib/draftLock";
+
+export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import PageHeading from "@/components/PageHeading";
 import EmptyState from "@/components/EmptyState";

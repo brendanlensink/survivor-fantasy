@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { getCurrentPlayer } from "@/lib/auth";
 import { draftLockAt, isDraftLocked, PICKS_PER_TRIBE } from "@/lib/draftLock";
+
+export const dynamic = "force-dynamic";
 import DraftForm from "@/components/DraftForm";
 import PageHeading from "@/components/PageHeading";
 

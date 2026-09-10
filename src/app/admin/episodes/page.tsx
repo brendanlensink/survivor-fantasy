@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import EpisodeStatForm from "@/components/admin/EpisodeStatForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminEpisodesPage({
   searchParams,
 }: {

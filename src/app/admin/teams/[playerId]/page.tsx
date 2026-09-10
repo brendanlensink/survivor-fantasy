@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import AdminTeamForm from "@/components/admin/AdminTeamForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminTeamEditPage({ params }: { params: { playerId: string } }) {
   const player = await db.player.findUnique({
     where: { id: params.playerId },

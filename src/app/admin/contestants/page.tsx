@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import ContestantAdminTable from "@/components/admin/ContestantAdminTable";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminContestantsPage() {
   const contestants = await db.contestant.findMany({ orderBy: [{ tribe: "asc" }, { name: "asc" }] });
 

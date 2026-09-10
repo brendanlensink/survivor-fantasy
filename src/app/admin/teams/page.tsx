@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import EmptyState from "@/components/EmptyState";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminTeamsPage() {
   const players = await db.player.findMany({
     include: { teams: { include: { contestants: true } } },

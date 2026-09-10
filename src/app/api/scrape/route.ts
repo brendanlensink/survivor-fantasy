@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { scrapeSeasonTable, seasonInProgressUrl } from "@/lib/scraper";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // Trigger manually for now (visit /api/scrape or POST to it, e.g. from an
 // admin button). Wire up Vercel Cron to hit this weekly once you trust it.
 //

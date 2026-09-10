@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { scoreEpisode, type StatLine } from "@/lib/scoring";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 import { tribeColor } from "@/lib/tribeColors";
 import EmptyState from "@/components/EmptyState";
 

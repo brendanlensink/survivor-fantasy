@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
+
+export const dynamic = "force-dynamic";
 import { rankLeaderboard } from "@/lib/leaderboard";
 import { getActualSeasonOutcome } from "@/lib/seasonOutcome";
 

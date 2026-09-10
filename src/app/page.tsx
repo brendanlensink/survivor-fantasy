@@ -1,6 +1,8 @@
 import Leaderboard from "@/components/Leaderboard";
 import PageHeading from "@/components/PageHeading";
 import { db } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
 import { rankLeaderboard } from "@/lib/leaderboard";
 import { getActualSeasonOutcome } from "@/lib/seasonOutcome";

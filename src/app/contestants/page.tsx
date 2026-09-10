@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { tribeColor } from "@/lib/tribeColors";
 import PageHeading from "@/components/PageHeading";
 
+export const dynamic = "force-dynamic";
+
 export default async function ContestantsPage() {
   const contestants = await db.contestant.findMany({ orderBy: [{ tribe: "asc" }, { name: "asc" }] });
   const tribes = Array.from(new Set(contestants.map((c) => c.tribe)));
