@@ -5,8 +5,10 @@ import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 import { tribeColor } from "@/lib/tribeColors";
 import EmptyState from "@/components/EmptyState";
+import { isSpoilerFreeMode } from "@/lib/spoilerMode";
 
 export default async function ContestantPage({ params }: { params: { id: string } }) {
+  const spoilerFree = isSpoilerFreeMode();
   const id = decodeURIComponent(params.id);
   const contestant = await db.contestant.findUnique({ where: { id } });
   if (!contestant) notFound();
@@ -48,7 +50,7 @@ export default async function ContestantPage({ params }: { params: { id: string 
       <div className="mb-6">
         <h1
           className={`font-display text-3xl uppercase tracking-wide ${
-            contestant.isEliminated ? "text-parchment-dim line-through" : "text-parchment"
+            !spoilerFree && contestant.isEliminated ? "text-parchment-dim line-through" : "text-parchment"
           }`}
         >
           {contestant.name}
@@ -61,10 +63,13 @@ export default async function ContestantPage({ params }: { params: { id: string 
           >
             {contestant.tribe}
           </span>
-          <span className={statusColor}>{status}</span>
+          {!spoilerFree && <span className={statusColor}>{status}</span>}
         </p>
       </div>
 
+      {spoilerFree ? (
+        <EmptyState compact>Episode stats are hidden in spoiler-free mode.</EmptyState>
+      ) : (
       <div className="overflow-x-auto bg-wood-800 rounded p-4">
         <table className="text-left border-collapse text-sm w-full">
           <thead>
@@ -110,6 +115,7 @@ export default async function ContestantPage({ params }: { params: { id: string 
         </table>
         {rows.length === 0 && <EmptyState compact>No episode stats yet.</EmptyState>}
       </div>
+      )}
     </div>
   );
 }

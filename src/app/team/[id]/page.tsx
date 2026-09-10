@@ -6,8 +6,10 @@ export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import PageHeading from "@/components/PageHeading";
 import EmptyState from "@/components/EmptyState";
+import { isSpoilerFreeMode } from "@/lib/spoilerMode";
 
 export default async function TeamPage({ params }: { params: { id: string } }) {
+  const spoilerFree = isSpoilerFreeMode();
   const team = await db.team.findUnique({
     where: { id: params.id },
     include: { player: true, contestants: { include: { contestant: true } }, winnerPrediction: true },
@@ -46,6 +48,20 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
     <div>
       <PageHeading subtitle={<>Drafted by {team.player.name}</>}>{team.name}</PageHeading>
 
+      {spoilerFree ? (
+        <div className="bg-wood-800 rounded p-4">
+          <ul className="space-y-1 text-sm">
+            {team.contestants.map((tc) => (
+              <li key={tc.id}>
+                <a href={`/contestant/${tc.contestantId}`} className="hover:text-ember transition-colors">
+                  {tc.contestant.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="text-parchment-dim text-xs mt-3">Points and episode results are hidden in spoiler-free mode.</p>
+        </div>
+      ) : (
       <div className="overflow-x-auto bg-wood-800 rounded p-4">
         <table className="text-left border-collapse text-sm w-full">
           <thead>
@@ -87,6 +103,7 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
         </table>
         {episodeNumbers.length === 0 && <EmptyState compact>No episode stats yet.</EmptyState>}
       </div>
+      )}
 
       <div className="mt-6 bg-wood-800 rounded p-4">
         <h2 className="text-xs font-medium uppercase tracking-wide text-parchment-dim mb-2">Tiebreakers</h2>

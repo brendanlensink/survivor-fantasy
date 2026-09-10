@@ -1,12 +1,14 @@
 import { db } from "@/lib/db";
 import { tribeColor } from "@/lib/tribeColors";
 import PageHeading from "@/components/PageHeading";
+import { isSpoilerFreeMode } from "@/lib/spoilerMode";
 
 export const dynamic = "force-dynamic";
 
 export default async function ContestantsPage() {
   const contestants = await db.contestant.findMany({ orderBy: [{ tribe: "asc" }, { name: "asc" }] });
   const tribes = Array.from(new Set(contestants.map((c) => c.tribe)));
+  const spoilerFree = isSpoilerFreeMode();
 
   return (
     <div>
@@ -28,12 +30,12 @@ export default async function ContestantsPage() {
                       <a
                         href={`/contestant/${c.id}`}
                         className={`hover:text-ember transition-colors ${
-                          c.isEliminated ? "text-parchment-dim line-through" : "text-parchment"
+                          !spoilerFree && c.isEliminated ? "text-parchment-dim line-through" : "text-parchment"
                         }`}
                       >
                         {c.name}
                       </a>
-                      {c.isWinner && <span className="text-ember text-xs ml-1">★</span>}
+                      {!spoilerFree && c.isWinner && <span className="text-ember text-xs ml-1">★</span>}
                     </li>
                   ))}
               </ul>

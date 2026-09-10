@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
 import { rankLeaderboard } from "@/lib/leaderboard";
 import { getActualSeasonOutcome } from "@/lib/seasonOutcome";
+import { isSpoilerFreeMode } from "@/lib/spoilerMode";
 
 // Server component: fetch + score at request time. Fine for a friend-group
 // scale app; add caching/ISR later if it matters.
@@ -46,11 +47,12 @@ export default async function HomePage() {
   }));
 
   const ranked = rankLeaderboard(leaderboard, actualWinnerId, actualIdolsPlayed);
+  const spoilerFree = isSpoilerFreeMode();
 
   return (
     <div>
       <PageHeading>League Standings</PageHeading>
-      <Leaderboard entries={ranked} />
+      <Leaderboard entries={ranked} spoilerFree={spoilerFree} />
     </div>
   );
 }
