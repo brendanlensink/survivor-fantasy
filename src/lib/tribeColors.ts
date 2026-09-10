@@ -9,7 +9,7 @@ const PALETTE = [
   { bg: "#b23a1f", text: "#f0e6d2" }, // blood red
   { bg: "#7a8a3d", text: "#1a1410" }, // moss green
   { bg: "#c9a63d", text: "#1a1410" }, // gold
-  { bg: "#8a5a9e", text: "#f0e6d2" }, // violet
+  { bg: "#7a4a8e", text: "#f0e6d2" }, // violet
 ];
 
 export function tribeColor(tribe: string) {

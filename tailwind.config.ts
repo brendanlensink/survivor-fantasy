@@ -25,7 +25,7 @@ const config: Config = {
         parchment: {
           DEFAULT: "#f0e6d2",
           muted: "#c9bfae",
-          dim: "#8a7d6a",
+          dim: "#8f8270",
         },
       },
       fontFamily: {

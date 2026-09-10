@@ -19,7 +19,11 @@ export default async function ContestantsPage() {
           return (
             <div key={tribe} className="bg-wood-800 rounded p-3">
               <h2 className="text-xs font-medium uppercase tracking-wide text-parchment-dim mb-2 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color.bg }} />
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: color.bg }}
+                  aria-hidden="true"
+                />
                 {tribe}
               </h2>
               <ul className="space-y-1 text-sm">

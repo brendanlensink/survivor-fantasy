@@ -86,7 +86,11 @@ export default function AdminTeamForm({
           return (
             <div key={tribe} className="bg-wood-800 rounded p-3">
               <h3 className="text-xs font-medium uppercase tracking-wide text-parchment-dim mb-2 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color.bg }} />
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: color.bg }}
+                  aria-hidden="true"
+                />
                 {tribe} ({countByTribe(tribe)}/{PICKS_PER_TRIBE})
               </h3>
               <ul className="space-y-1 text-sm">
@@ -115,8 +119,11 @@ export default function AdminTeamForm({
         <h3 className="text-xs font-medium uppercase tracking-wide text-parchment-dim">Tiebreakers</h3>
 
         <div>
-          <label className="block text-sm text-parchment-dim mb-1">Winner pick</label>
+          <label htmlFor="admin-winner-prediction" className="block text-sm text-parchment-dim mb-1">
+            Winner pick
+          </label>
           <select
+            id="admin-winner-prediction"
             className="w-full bg-wood-800 border border-wood-600 rounded px-2 py-1.5 text-parchment"
             value={winnerPredictionId}
             onChange={(e) => setWinnerPredictionId(e.target.value)}
@@ -131,8 +138,11 @@ export default function AdminTeamForm({
         </div>
 
         <div>
-          <label className="block text-sm text-parchment-dim mb-1">Idols played guess</label>
+          <label htmlFor="admin-idols-played-guess" className="block text-sm text-parchment-dim mb-1">
+            Idols played guess
+          </label>
           <input
+            id="admin-idols-played-guess"
             type="number"
             min={0}
             step={1}

@@ -96,7 +96,11 @@ export default function DraftForm({
           return (
             <div key={tribe} className="bg-wood-800 rounded p-3">
               <h3 className="text-xs font-medium uppercase tracking-wide text-parchment-dim mb-2 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color.bg }} />
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: color.bg }}
+                  aria-hidden="true"
+                />
                 {tribe} ({countByTribe(tribe)}/{PICKS_PER_TRIBE})
               </h3>
               <ul className="space-y-1 text-sm">
@@ -126,8 +130,11 @@ export default function DraftForm({
         <h3 className="text-xs font-medium uppercase tracking-wide text-parchment-dim">Tiebreakers</h3>
 
         <div>
-          <label className="block text-sm text-parchment-dim mb-1">Who wins the season?</label>
+          <label htmlFor="winner-prediction" className="block text-sm text-parchment-dim mb-1">
+            Who wins the season?
+          </label>
           <select
+            id="winner-prediction"
             className="w-full bg-wood-800 border border-wood-600 rounded px-2 py-1.5 text-parchment"
             disabled={locked}
             value={winnerPredictionId}
@@ -145,10 +152,11 @@ export default function DraftForm({
         </div>
 
         <div>
-          <label className="block text-sm text-parchment-dim mb-1">
+          <label htmlFor="idols-played-guess" className="block text-sm text-parchment-dim mb-1">
             How many idols get played this season? (closest guess wins)
           </label>
           <input
+            id="idols-played-guess"
             type="number"
             min={0}
             step={1}
