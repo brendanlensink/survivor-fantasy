@@ -5,6 +5,7 @@ import { draftLockAt, isDraftLocked, PICKS_PER_TRIBE } from "@/lib/draftLock";
 export const dynamic = "force-dynamic";
 import DraftForm from "@/components/DraftForm";
 import PageHeading from "@/components/PageHeading";
+import AuthButtons from "@/components/AuthButtons";
 
 // Self-service draft (README Phase 3, as refined for this league): each
 // signed-in player picks their own roster on their own time — no turn
@@ -57,7 +58,10 @@ export default async function DraftPage() {
       </PageHeading>
 
       {!player && (
-        <p className="text-parchment-dim mb-6">Sign in with Google (top right) to draft your team.</p>
+        <div className="flex flex-col items-start gap-3 mb-6">
+          <p className="text-parchment-dim">You need to sign in to draft your team.</p>
+          <AuthButtons user={null} />
+        </div>
       )}
 
       {player && (

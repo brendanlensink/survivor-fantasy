@@ -27,6 +27,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <TorchIcon className="w-5 h-5 text-ember" />
             Survivor Fantasy
           </a>
+          <a href="/" className="font-display uppercase tracking-wide text-sm text-parchment-dim hover:text-ember transition-colors">
+            Standings
+          </a>
           <a href="/draft" className="font-display uppercase tracking-wide text-sm text-parchment-dim hover:text-ember transition-colors">
             Draft
           </a>
