@@ -1,12 +1,15 @@
 export default function TorchIcon({ className }: { className?: string }) {
+  // Fixed-color pixel-art asset, not a stroke icon — it can't pick up
+  // `text-*` tint classes the way the old inline SVG did. Callers that pass
+  // a "dim"/muted wood color (unfilled draft pips, EmptyState's decorative
+  // icon) still get a visibly unlit look via opacity + grayscale instead.
+  const muted = className?.includes("wood-500") || className?.includes("wood-600");
   return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path
-        d="M12 2c1.5 2 2.5 3.3 1 5-1 1.1-1 2 0 3 1.8 1.8 1.2 4.3-1 4.3s-2.8-2.5-1-4.3c1-1 1-1.9 0-3-1.5-1.7-.5-3 1-5Z"
-        fill="currentColor"
-      />
-      <path d="M12 13v9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M9 22h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
+    <img
+      src="/images/torch.png"
+      alt=""
+      aria-hidden="true"
+      className={`${className ?? ""} object-contain ${muted ? "opacity-40 grayscale" : ""}`}
+    />
   );
 }
