@@ -75,9 +75,21 @@ export default async function ContestantPage({ params }: { params: { id: string 
           <thead>
             <tr className="border-b border-wood-600 text-parchment-dim text-xs">
               <th className="py-2 pr-3">Ep</th>
-              <th className="py-2 px-2 text-right">ChW</th>
-              <th className="py-2 px-2 text-right">VFB</th>
-              <th className="py-2 px-2 text-right">VAP</th>
+              <th className="py-2 px-2 text-right">
+                <abbr title="Challenge Wins — fractional, e.g. 0.2 for a 5-person tribe win" className="cursor-help decoration-dotted">
+                  ChW
+                </abbr>
+              </th>
+              <th className="py-2 px-2 text-right">
+                <abbr title="Votes For Bootee — votes you cast for whoever got voted out" className="cursor-help decoration-dotted">
+                  VFB
+                </abbr>
+              </th>
+              <th className="py-2 px-2 text-right">
+                <abbr title="Votes Against Player — votes cast against you" className="cursor-help decoration-dotted">
+                  VAP
+                </abbr>
+              </th>
               <th className="py-2 px-2 text-center">Idol found</th>
               <th className="py-2 px-2 text-center">Idol played</th>
               <th className="py-2 px-2 text-center">Tribal</th>
@@ -114,6 +126,11 @@ export default async function ContestantPage({ params }: { params: { id: string 
           )}
         </table>
         {rows.length === 0 && <EmptyState compact>No episode stats yet.</EmptyState>}
+        {rows.length > 0 && (
+          <p className="text-parchment-dim text-xs mt-2">
+            ChW = Challenge Wins · VFB = Votes For Bootee · VAP = Votes Against Player
+          </p>
+        )}
       </div>
       )}
     </div>
