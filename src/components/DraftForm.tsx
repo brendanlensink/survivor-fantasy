@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { tribeColor } from "@/lib/tribeColors";
-import TorchIcon from "./TorchIcon";
 
 interface Contestant {
   id: string;
@@ -104,13 +103,8 @@ export default function DraftForm({
                   aria-hidden="true"
                 />
                 <span className="flex-1">{tribe}</span>
-                <span className="flex items-center gap-0.5" aria-hidden="true">
-                  {Array.from({ length: PICKS_PER_TRIBE }).map((_, i) => (
-                    <TorchIcon key={i} className={`w-3 h-3 ${i < picked ? "text-ember" : "text-wood-600"}`} />
-                  ))}
-                </span>
-                <span className="sr-only">
-                  {picked} of {PICKS_PER_TRIBE} picked
+                <span className={picked === PICKS_PER_TRIBE ? "text-ember" : ""}>
+                  {picked}/{PICKS_PER_TRIBE}
                 </span>
               </h3>
               <ul className="space-y-1.5 text-sm">

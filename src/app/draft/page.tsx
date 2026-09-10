@@ -45,11 +45,9 @@ export default async function DraftPage() {
             Pick exactly {PICKS_PER_TRIBE} contestants from each tribe ({tribes.join(", ") || "no tribes seeded yet"}).
             Picks are private — you won&apos;t see anyone else&apos;s roster until the draft locks.
             {lockAt && (
-              <>
-                {" "}
-                Picks {locked ? "locked as of" : "lock at"}
-                <span className="block mt-1 text-parchment">{lockAt.toLocaleString()}.</span>
-              </>
+              <span className="block mt-1">
+                Picks {locked ? "locked as of" : "lock at"} <span className="text-parchment">{lockAt.toLocaleString()}.</span>
+              </span>
             )}
           </>
         }
