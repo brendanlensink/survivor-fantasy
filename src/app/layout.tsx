@@ -36,7 +36,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <NavMenu admin={admin} user={user} spoilerFree={spoilerFree} />
           </nav>
         )}
-        <main className="max-w-4xl mx-auto p-6">
+        <main
+          className={`max-w-4xl mx-auto p-6 ${
+            user ? "" : "min-h-screen flex items-center justify-center"
+          }`}
+        >
           {user ? <div className="bg-black/40 rounded-lg p-6">{children}</div> : <SignInRequired />}
         </main>
       </body>
