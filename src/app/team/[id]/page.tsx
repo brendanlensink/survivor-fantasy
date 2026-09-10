@@ -53,7 +53,7 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
           <ul className="space-y-1 text-sm">
             {team.contestants.map((tc) => (
               <li key={tc.id}>
-                <a href={`/contestant/${tc.contestantId}`} className="hover:text-ember transition-colors">
+                <a href={`/contestant/${encodeURIComponent(tc.contestantId)}`} className="hover:text-ember transition-colors">
                   {tc.contestant.name}
                 </a>
               </li>
@@ -81,7 +81,7 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
               return (
                 <tr key={tc.id} className="border-b border-wood-700">
                   <td className={`py-2 pr-4 ${tc.contestant.isEliminated ? "text-parchment-dim line-through" : ""}`}>
-                    <a href={`/contestant/${tc.contestantId}`} className="hover:text-ember transition-colors">
+                    <a href={`/contestant/${encodeURIComponent(tc.contestantId)}`} className="hover:text-ember transition-colors">
                       {tc.contestant.name}
                     </a>
                   </td>

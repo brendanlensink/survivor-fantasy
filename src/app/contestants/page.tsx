@@ -28,7 +28,7 @@ export default async function ContestantsPage() {
                   .map((c) => (
                     <li key={c.id}>
                       <a
-                        href={`/contestant/${c.id}`}
+                        href={`/contestant/${encodeURIComponent(c.id)}`}
                         className={`hover:text-ember transition-colors ${
                           !spoilerFree && c.isEliminated ? "text-parchment-dim line-through" : "text-parchment"
                         }`}
