@@ -1,4 +1,5 @@
 import EmptyState from "./EmptyState";
+import EyeOffIcon from "./EyeOffIcon";
 
 interface Entry {
   teamId: string;
@@ -67,7 +68,7 @@ export default function Leaderboard({
                 !spoilerFree && entry.points < 0 ? "text-blood" : "text-ember"
               }`}
             >
-              {spoilerFree ? "🔒" : entry.points.toFixed(1)}
+              {spoilerFree ? <EyeOffIcon className="w-5 h-5 inline-block" /> : entry.points.toFixed(1)}
             </span>
           </a>
         </li>
