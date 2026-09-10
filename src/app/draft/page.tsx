@@ -47,8 +47,8 @@ export default async function DraftPage() {
             {lockAt && (
               <>
                 {" "}
-                Picks {locked ? "locked as of" : "lock at"}{" "}
-                <span className="text-parchment">{lockAt.toLocaleString()}</span>.
+                Picks {locked ? "locked as of" : "lock at"}
+                <span className="block mt-1 text-parchment">{lockAt.toLocaleString()}.</span>
               </>
             )}
           </>
