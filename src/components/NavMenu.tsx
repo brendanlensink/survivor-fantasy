@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import AuthButtons from "./AuthButtons";
-import { toggleSpoilerMode } from "@/lib/spoilerModeActions";
+import SpoilerToggleButton from "./SpoilerToggleButton";
 
 function TrophyIcon({ className }: { className?: string }) {
   return (
@@ -59,14 +59,9 @@ const linkClass =
 
 function SpoilerToggle() {
   return (
-    <form action={toggleSpoilerMode}>
-      <button
-        type="submit"
-        className="font-display uppercase tracking-wide text-xs text-parchment-dim hover:text-ember transition-colors border border-wood-600 rounded px-2 py-1"
-      >
-        Spoilers on — turn off
-      </button>
-    </form>
+    <SpoilerToggleButton className="font-display uppercase tracking-wide text-xs text-parchment-dim hover:text-ember transition-colors border border-wood-600 rounded px-2 py-1">
+      Spoilers on — turn off
+    </SpoilerToggleButton>
   );
 }
 

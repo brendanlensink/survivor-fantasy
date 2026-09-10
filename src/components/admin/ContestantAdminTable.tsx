@@ -42,6 +42,7 @@ function ContestantRow({ contestant }: { contestant: Contestant }) {
       <td className="py-1.5 pr-3 text-parchment">{contestant.name}</td>
       <td className="py-1.5 px-2">
         <input
+          aria-label={`Tribe for ${contestant.name}`}
           className="w-24 bg-wood-800 border border-wood-600 rounded px-1 py-0.5 text-parchment"
           value={tribe}
           onChange={(e) => setTribe(e.target.value)}
@@ -50,6 +51,7 @@ function ContestantRow({ contestant }: { contestant: Contestant }) {
       <td className="py-1.5 px-2 text-center">
         <input
           type="checkbox"
+          aria-label={`Eliminated: ${contestant.name}`}
           className="accent-blood"
           checked={isEliminated}
           onChange={(e) => setIsEliminated(e.target.checked)}
@@ -58,6 +60,7 @@ function ContestantRow({ contestant }: { contestant: Contestant }) {
       <td className="py-1.5 px-2">
         <input
           type="number"
+          aria-label={`Booted episode for ${contestant.name}`}
           className="w-14 bg-wood-800 border border-wood-600 rounded px-1 py-0.5 text-parchment"
           value={bootedEp}
           onChange={(e) => setBootedEp(e.target.value)}
@@ -66,6 +69,7 @@ function ContestantRow({ contestant }: { contestant: Contestant }) {
       <td className="py-1.5 px-2 text-center">
         <input
           type="checkbox"
+          aria-label={`Winner: ${contestant.name}`}
           className="accent-ember"
           checked={isWinner}
           onChange={(e) => setIsWinner(e.target.checked)}

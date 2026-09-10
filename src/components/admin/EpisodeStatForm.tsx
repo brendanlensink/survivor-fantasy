@@ -87,6 +87,7 @@ export default function EpisodeStatForm({
                     <input
                       type="number"
                       step="0.01"
+                      aria-label={`Challenge wins for ${c.name}`}
                       className="w-16 bg-wood-800 border border-wood-600 rounded px-1 py-0.5 text-parchment"
                       value={row.challengeWins}
                       onChange={(e) => update(c.id, "challengeWins", Number(e.target.value))}
@@ -95,6 +96,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2">
                     <input
                       type="number"
+                      aria-label={`Votes for bootee for ${c.name}`}
                       className="w-14 bg-wood-800 border border-wood-600 rounded px-1 py-0.5 text-parchment"
                       value={row.votesForBootee}
                       onChange={(e) => update(c.id, "votesForBootee", Number(e.target.value))}
@@ -103,6 +105,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2">
                     <input
                       type="number"
+                      aria-label={`Votes against ${c.name}`}
                       className="w-14 bg-wood-800 border border-wood-600 rounded px-1 py-0.5 text-parchment"
                       value={row.votesAgainstPlayer}
                       onChange={(e) => update(c.id, "votesAgainstPlayer", Number(e.target.value))}
@@ -111,6 +114,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2 text-center">
                     <input
                       type="checkbox"
+                      aria-label={`Idol found: ${c.name}`}
                       className="accent-ember"
                       checked={row.idolFound}
                       onChange={(e) => update(c.id, "idolFound", e.target.checked)}
@@ -119,6 +123,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2 text-center">
                     <input
                       type="checkbox"
+                      aria-label={`Idol played: ${c.name}`}
                       className="accent-ember"
                       checked={row.idolPlayed}
                       onChange={(e) => update(c.id, "idolPlayed", e.target.checked)}
@@ -127,6 +132,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2 text-center">
                     <input
                       type="checkbox"
+                      aria-label={`Went to tribal: ${c.name}`}
                       className="accent-ember"
                       checked={row.wentToTribal}
                       onChange={(e) => update(c.id, "wentToTribal", e.target.checked)}
@@ -135,6 +141,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2 text-center">
                     <input
                       type="checkbox"
+                      aria-label={`Booted: ${c.name}`}
                       className="accent-blood"
                       checked={row.wasBooted}
                       onChange={(e) => update(c.id, "wasBooted", e.target.checked)}
@@ -143,6 +150,7 @@ export default function EpisodeStatForm({
                   <td className="py-1.5 px-2 text-center">
                     <input
                       type="checkbox"
+                      aria-label={`Immune: ${c.name}`}
                       className="accent-ember"
                       checked={row.wasImmune}
                       onChange={(e) => update(c.id, "wasImmune", e.target.checked)}

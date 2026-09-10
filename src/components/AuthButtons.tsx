@@ -51,7 +51,10 @@ export default function AuthButtons({
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="w-7 h-7 rounded-full bg-ember text-wood-950 font-display flex items-center justify-center text-xs shrink-0">
+      <span
+        className="w-7 h-7 rounded-full bg-ember text-wood-950 font-display flex items-center justify-center text-xs shrink-0"
+        aria-hidden="true"
+      >
         {initials(displayName)}
       </span>
       <span className="text-parchment-dim truncate">{displayName}</span>
