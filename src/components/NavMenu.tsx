@@ -90,11 +90,21 @@ export default function NavMenu({
   return (
     <>
       <div className="hidden md:flex items-center gap-6 flex-1">
-        {links.map((l) => (
-          <a key={l.href} href={l.href} className={linkClass}>
-            {l.label}
-          </a>
-        ))}
+        {links.map((l) => {
+          const active = l.href === "/" ? pathname === "/" : pathname?.startsWith(l.href);
+          return (
+            <a
+              key={l.href}
+              href={l.href}
+              aria-current={active ? "page" : undefined}
+              className={`${linkClass} border-b-2 pb-0.5 ${
+                active ? "border-ember text-ember" : "border-transparent"
+              }`}
+            >
+              {l.label}
+            </a>
+          );
+        })}
         <div className="ml-auto flex items-center gap-4">
           {!spoilerFree && <SpoilerToggle />}
           <AuthButtons user={user} />
