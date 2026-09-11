@@ -77,3 +77,25 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true, teamId: team.id });
 }
+
+export async function DELETE(req: Request) {
+  if (!(await isCurrentUserAdmin())) {
+    return NextResponse.json({ ok: false, error: "Not authorized" }, { status: 403 });
+  }
+
+  const body = await req.json();
+  const { playerId } = body as { playerId?: string };
+  if (!playerId) {
+    return NextResponse.json({ ok: false, error: "playerId is required" }, { status: 400 });
+  }
+
+  const team = await db.team.findFirst({ where: { playerId } });
+  if (!team) {
+    return NextResponse.json({ ok: false, error: "Team not found" }, { status: 404 });
+  }
+
+  await db.teamContestant.deleteMany({ where: { teamId: team.id } });
+  await db.team.delete({ where: { id: team.id } });
+
+  return NextResponse.json({ ok: true });
+}

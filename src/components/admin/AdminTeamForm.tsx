@@ -19,6 +19,7 @@ export default function AdminTeamForm({
   initialPicks,
   initialWinnerPredictionId,
   initialIdolsPlayedGuess,
+  hasTeam,
 }: {
   playerId: string;
   contestants: Contestant[];
@@ -26,6 +27,7 @@ export default function AdminTeamForm({
   initialPicks: string[];
   initialWinnerPredictionId: string | null;
   initialIdolsPlayedGuess: number | null;
+  hasTeam: boolean;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set(initialPicks));
@@ -34,6 +36,10 @@ export default function AdminTeamForm({
     initialIdolsPlayedGuess !== null ? String(initialIdolsPlayedGuess) : ""
   );
   const [status, setStatus] = useState<{ kind: "idle" | "saving" | "error" | "ok"; message?: string }>({
+    kind: "idle",
+  });
+  const [teamExists, setTeamExists] = useState(hasTeam);
+  const [deleteStatus, setDeleteStatus] = useState<{ kind: "idle" | "deleting" | "error"; message?: string }>({
     kind: "idle",
   });
 
@@ -75,6 +81,29 @@ export default function AdminTeamForm({
       return;
     }
     setStatus({ kind: "ok" });
+    setTeamExists(true);
+    router.refresh();
+  }
+
+  async function deleteTeam() {
+    if (!confirm("Delete this player's team? This cannot be undone.")) return;
+    setDeleteStatus({ kind: "deleting" });
+
+    const res = await fetch("/api/admin/team", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ playerId }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) {
+      setDeleteStatus({ kind: "error", message: data.error ?? "Delete failed" });
+      return;
+    }
+    setDeleteStatus({ kind: "idle" });
+    setSelected(new Set());
+    setWinnerPredictionId("");
+    setIdolsPlayedGuess("");
+    setTeamExists(false);
     router.refresh();
   }
 
@@ -153,19 +182,32 @@ export default function AdminTeamForm({
         </div>
       </div>
 
-      <button
-        onClick={save}
-        disabled={status.kind === "saving" || !complete}
-        className="bg-ember text-wood-950 rounded px-4 py-1.5 text-sm font-medium hover:bg-ember-light transition-colors disabled:opacity-40"
-      >
-        {status.kind === "saving" ? "Saving..." : "Save"}
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={save}
+          disabled={status.kind === "saving" || !complete}
+          className="bg-ember text-wood-950 rounded px-4 py-1.5 text-sm font-medium hover:bg-ember-light transition-colors disabled:opacity-40"
+        >
+          {status.kind === "saving" ? "Saving..." : "Save"}
+        </button>
+
+        {teamExists && (
+          <button
+            onClick={deleteTeam}
+            disabled={deleteStatus.kind === "deleting"}
+            className="border border-blood text-blood rounded px-4 py-1.5 text-sm font-medium hover:bg-blood hover:text-parchment transition-colors disabled:opacity-40"
+          >
+            {deleteStatus.kind === "deleting" ? "Deleting..." : "Delete team"}
+          </button>
+        )}
+      </div>
       {!complete && (
         <p className="text-parchment-dim text-sm mt-2">Pick exactly {PICKS_PER_TRIBE} from every tribe to save.</p>
       )}
 
       {status.kind === "error" && <p className="text-blood text-sm mt-2">{status.message}</p>}
       {status.kind === "ok" && <p className="text-ember text-sm mt-2">Saved.</p>}
+      {deleteStatus.kind === "error" && <p className="text-blood text-sm mt-2">{deleteStatus.message}</p>}
     </div>
   );
 }

@@ -30,6 +30,7 @@ export default async function AdminTeamEditPage({ params }: { params: { playerId
         initialPicks={team?.contestants.map((tc) => tc.contestantId) ?? []}
         initialWinnerPredictionId={team?.winnerPredictionId ?? null}
         initialIdolsPlayedGuess={team?.idolsPlayedGuess ?? null}
+        hasTeam={Boolean(team)}
       />
     </div>
   );
