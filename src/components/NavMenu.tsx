@@ -78,10 +78,6 @@ export default function NavMenu({
   const pathname = usePathname();
   const links = admin ? [...LINKS, { href: "/admin", label: "Admin", icon: AdminIcon }] : LINKS;
 
-  // Signed-out visitors can't see anything else on the site, so there's
-  // nothing to navigate to — the sign-in prompt in the body covers it.
-  if (!user) return null;
-
   return (
     <>
       <div className="hidden md:flex items-center gap-6 flex-1">

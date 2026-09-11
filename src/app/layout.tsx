@@ -6,7 +6,6 @@ import { isCurrentUserAdmin } from "@/lib/admin";
 import TorchIcon from "@/components/TorchIcon";
 import SpoilerBanner from "@/components/SpoilerBanner";
 import NavMenu from "@/components/NavMenu";
-import SignInRequired from "@/components/SignInRequired";
 import { isSpoilerFreeMode } from "@/lib/spoilerMode";
 
 const oswald = Oswald({ subsets: ["latin"], variable: "--font-display" });
@@ -26,22 +25,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen bg-wood-900 text-parchment">
         <div className="fiji-bg" aria-hidden="true" />
         <div className="fiji-overlay" aria-hidden="true" />
-        {user && spoilerFree && <SpoilerBanner />}
-        {user && (
-          <nav className="relative bg-black/60 border-b border-wood-600 px-6 py-4 flex gap-6 items-center">
-            <a href="/" className="font-display text-xl tracking-wide uppercase flex items-center gap-2 text-parchment shrink-0">
-              <TorchIcon className="w-5 h-5 text-ember" />
-              Survivor Fantasy
-            </a>
-            <NavMenu admin={admin} user={user} spoilerFree={spoilerFree} />
-          </nav>
-        )}
-        <main
-          className={`max-w-4xl mx-auto p-6 ${
-            user ? "" : "min-h-screen flex items-center justify-center"
-          }`}
-        >
-          {user ? <div className="bg-black/40 rounded-lg p-6">{children}</div> : <SignInRequired />}
+        {spoilerFree && <SpoilerBanner />}
+        <nav className="relative bg-black/60 border-b border-wood-600 px-6 py-4 flex gap-6 items-center">
+          <a href="/" className="font-display text-xl tracking-wide uppercase flex items-center gap-2 text-parchment shrink-0">
+            <TorchIcon className="w-5 h-5 text-ember" />
+            Survivor Fantasy
+          </a>
+          <NavMenu admin={admin} user={user} spoilerFree={spoilerFree} />
+        </nav>
+        <main className="max-w-4xl mx-auto p-6">
+          <div className="bg-black/40 rounded-lg p-6">{children}</div>
         </main>
       </body>
     </html>

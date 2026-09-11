@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { scrapeSeasonTable, seasonInProgressUrl } from "@/lib/scraper";
 import { db } from "@/lib/db";
+import { isCurrentUserAdmin } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,10 @@ export const dynamic = "force-dynamic";
 const SEASON_NUMBER = 51;
 
 export async function POST() {
+  if (!(await isCurrentUserAdmin())) {
+    return NextResponse.json({ ok: false, error: "Not authorized" }, { status: 403 });
+  }
+
   try {
     const url = seasonInProgressUrl(SEASON_NUMBER);
     const result = await scrapeSeasonTable(url);
