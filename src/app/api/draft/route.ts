@@ -40,10 +40,20 @@ export async function POST(req: Request) {
   if (contestants.length !== contestantIds.length) {
     return NextResponse.json({ ok: false, error: "One or more contestants not found" }, { status: 404 });
   }
+  const eliminatedPicks = contestants.filter((c) => c.isEliminated);
+  if (eliminatedPicks.length > 0) {
+    return NextResponse.json(
+      { ok: false, error: `Already voted out: ${eliminatedPicks.map((c) => c.name).join(", ")}` },
+      { status: 400 }
+    );
+  }
 
   const winnerPick = await db.contestant.findUnique({ where: { id: winnerPredictionId } });
   if (!winnerPick) {
     return NextResponse.json({ ok: false, error: "winnerPredictionId not found" }, { status: 404 });
+  }
+  if (winnerPick.isEliminated) {
+    return NextResponse.json({ ok: false, error: `${winnerPick.name} is already voted out` }, { status: 400 });
   }
 
   const allTribes = await db.contestant.findMany({ select: { tribe: true }, distinct: ["tribe"] });

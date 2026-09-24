@@ -15,7 +15,9 @@ import AuthButtons from "@/components/AuthButtons";
 export default async function DraftPage() {
   const player = await getCurrentPlayer();
 
+  // Anyone already voted out (e.g. booted before the draft locks) can't be picked.
   const contestants = await db.contestant.findMany({
+    where: { isEliminated: false },
     orderBy: [{ tribe: "asc" }, { name: "asc" }],
   });
 
