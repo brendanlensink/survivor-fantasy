@@ -64,11 +64,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <PageHeading
-        subtitle="Survivor Fantasy is a friend-group fantasy league for the TV show Survivor — sign in to draft your own team."
-      >
-        League Standings
-      </PageHeading>
+      <PageHeading>League Standings</PageHeading>
       <div className="grid md:grid-cols-[1fr_280px] gap-6 items-start">
         <Leaderboard entries={ranked} spoilerFree={spoilerFree} />
         <SeasonStatus
