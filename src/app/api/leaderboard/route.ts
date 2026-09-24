@@ -5,6 +5,7 @@ import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
 export const dynamic = "force-dynamic";
 import { rankLeaderboard } from "@/lib/leaderboard";
 import { getActualSeasonOutcome } from "@/lib/seasonOutcome";
+import { isDraftLocked } from "@/lib/draftLock";
 
 export async function GET() {
   const [stats, teams, { actualWinnerId, actualIdolsPlayed }] = await Promise.all([
@@ -48,6 +49,13 @@ export async function GET() {
   }));
 
   const ranked = rankLeaderboard(leaderboard, actualWinnerId, actualIdolsPlayed);
+
+  // Picks and tiebreaker answers are private until the draft locks.
+  if (!isDraftLocked()) {
+    return NextResponse.json({
+      leaderboard: ranked.map(({ roster, winnerPredictionId, idolsPlayedGuess, ...entry }) => entry),
+    });
+  }
 
   return NextResponse.json({ leaderboard: ranked });
 }

@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { scoreEpisode, scoreSeason, type StatLine } from "@/lib/scoring";
 import { isDraftLocked } from "@/lib/draftLock";
+import { getCurrentPlayer } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
@@ -17,8 +18,11 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
 
   if (!team) notFound();
 
-  // Tiebreaker answers stay private, same as roster picks, until the draft locks.
+  // Roster picks and tiebreaker answers stay private until the draft
+  // locks. The team's owner can always see their own.
   const locked = isDraftLocked();
+  const viewer = await getCurrentPlayer();
+  const canSeePicks = locked || viewer?.id === team.playerId;
 
   const stats = await db.episodeStat.findMany({ include: { episode: true } });
   const statLines: StatLine[] = stats.map((s) => ({
@@ -48,7 +52,11 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
     <div>
       <PageHeading subtitle={<>Drafted by {team.player.name}</>}>{team.name}</PageHeading>
 
-      {spoilerFree ? (
+      {!canSeePicks ? (
+        <div className="bg-wood-800 rounded p-4">
+          <p className="text-parchment-dim text-sm">Roster is hidden until the draft locks.</p>
+        </div>
+      ) : spoilerFree ? (
         <div className="bg-wood-800 rounded p-4">
           <ul className="space-y-1 text-sm">
             {team.contestants.map((tc) => (
@@ -111,7 +119,7 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
 
       <div className="mt-6 bg-wood-800 rounded p-4">
         <h2 className="text-xs font-medium uppercase tracking-wide text-parchment-dim mb-2">Tiebreakers</h2>
-        {locked ? (
+        {canSeePicks ? (
           <ul className="space-y-1 text-sm">
             <li>
               Winner pick: <span className="text-parchment">{team.winnerPrediction?.name ?? "—"}</span>
