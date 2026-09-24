@@ -16,3 +16,7 @@ export function isDraftLocked(now: Date = new Date()): boolean {
 }
 
 export const PICKS_PER_TRIBE = 2;
+
+// Dates render on the server (UTC on Railway), so format them in the
+// league's own time zone or evening Pacific times show as the next day.
+export const LEAGUE_TIME_ZONE = "America/Los_Angeles";

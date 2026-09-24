@@ -1,11 +1,12 @@
 import TorchIcon from "./TorchIcon";
+import { LEAGUE_TIME_ZONE } from "@/lib/draftLock";
 
 function daysUntil(target: Date, now: Date): number {
   return Math.max(0, Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
 }
 
 function formatDate(d: Date): string {
-  return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+  return d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", timeZone: LEAGUE_TIME_ZONE });
 }
 
 export default function SeasonStatus({

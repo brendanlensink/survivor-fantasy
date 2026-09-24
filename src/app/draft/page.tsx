@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { getCurrentPlayer } from "@/lib/auth";
-import { draftLockAt, isDraftLocked, PICKS_PER_TRIBE } from "@/lib/draftLock";
+import { draftLockAt, isDraftLocked, LEAGUE_TIME_ZONE, PICKS_PER_TRIBE } from "@/lib/draftLock";
 
 export const dynamic = "force-dynamic";
 import DraftForm from "@/components/DraftForm";
@@ -48,7 +48,15 @@ export default async function DraftPage() {
             Picks are private — you won&apos;t see anyone else&apos;s roster until the draft locks.
             {lockAt && (
               <span className="block mt-1">
-                Picks {locked ? "locked as of" : "lock at"} <span className="text-parchment">{lockAt.toLocaleString()}.</span>
+                Picks {locked ? "locked as of" : "lock at"} <span className="text-parchment">{lockAt.toLocaleString("en-US", {
+                    weekday: "short",
+                    month: "short",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                    timeZone: LEAGUE_TIME_ZONE,
+                    timeZoneName: "short",
+                  })}.</span>
               </span>
             )}
           </>
