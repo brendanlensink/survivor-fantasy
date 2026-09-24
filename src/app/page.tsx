@@ -65,7 +65,7 @@ export default async function HomePage() {
   return (
     <div>
       <PageHeading>League Standings</PageHeading>
-      <div className="grid md:grid-cols-[1fr_280px] gap-6 items-start">
+      <div className="space-y-6">
         <Leaderboard entries={ranked} spoilerFree={spoilerFree} />
         <SeasonStatus
           locked={isDraftLocked()}
