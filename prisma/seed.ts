@@ -39,10 +39,12 @@ const CAST: { name: string; tribe: string }[] = [
 const BOOTS: { name: string; episode: number }[] = [{ name: "Aaliyah Puglia", episode: 1 }];
 
 async function main() {
+  // Only fills in missing rules. Values edited in the DB are the live
+  // config, so re-running the seed mustn't reset them to the defaults.
   for (const [key, points] of Object.entries(DEFAULT_SCORING_RULES)) {
     await db.scoringRule.upsert({
       where: { key },
-      update: { points },
+      update: {},
       create: { key, points },
     });
   }

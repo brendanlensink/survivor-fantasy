@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
+import { getScoringRules } from "@/lib/scoringRules";
 import { rankLeaderboard } from "@/lib/leaderboard";
 import { getActualSeasonOutcome } from "@/lib/seasonOutcome";
 import { isSpoilerFreeMode } from "@/lib/spoilerMode";
@@ -13,7 +14,7 @@ import { draftLockAt, isDraftLocked } from "@/lib/draftLock";
 // Server component: fetch + score at request time. Fine for a friend-group
 // scale app; add caching/ISR later if it matters.
 export default async function HomePage() {
-  const [stats, teams, { actualWinnerId, actualIdolsPlayed }, airedEpisodes] = await Promise.all([
+  const [stats, teams, { actualWinnerId, actualIdolsPlayed }, airedEpisodes, rules] = await Promise.all([
     db.episodeStat.findMany({ include: { episode: true } }),
     db.team.findMany({
       include: { player: true, contestants: { include: { contestant: true } } },
@@ -26,6 +27,7 @@ export default async function HomePage() {
       orderBy: { number: "desc" },
       take: 1,
     }),
+    getScoringRules(),
   ]);
 
   const statLines: StatLine[] = stats.map((s) => ({
@@ -41,7 +43,7 @@ export default async function HomePage() {
     wasImmune: s.wasImmune,
   }));
 
-  const contestantTotals = scoreSeason(statLines);
+  const contestantTotals = scoreSeason(statLines, rules);
 
   const leaderboard = teams.map((team) => ({
     teamId: team.id,

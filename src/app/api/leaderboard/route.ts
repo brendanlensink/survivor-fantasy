@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { scoreSeason, scoreTeam, type StatLine } from "@/lib/scoring";
+import { getScoringRules } from "@/lib/scoringRules";
 
 export const dynamic = "force-dynamic";
 import { rankLeaderboard } from "@/lib/leaderboard";
@@ -8,12 +9,13 @@ import { getActualSeasonOutcome } from "@/lib/seasonOutcome";
 import { isDraftLocked } from "@/lib/draftLock";
 
 export async function GET() {
-  const [stats, teams, { actualWinnerId, actualIdolsPlayed }] = await Promise.all([
+  const [stats, teams, { actualWinnerId, actualIdolsPlayed }, rules] = await Promise.all([
     db.episodeStat.findMany({ include: { episode: true } }),
     db.team.findMany({
       include: { player: true, contestants: { include: { contestant: true } } },
     }),
     getActualSeasonOutcome(),
+    getScoringRules(),
   ]);
 
   const statLines: StatLine[] = stats.map((s) => ({
@@ -29,7 +31,7 @@ export async function GET() {
     wasImmune: s.wasImmune,
   }));
 
-  const contestantTotals = scoreSeason(statLines);
+  const contestantTotals = scoreSeason(statLines, rules);
 
   const leaderboard = teams.map((team) => ({
     teamId: team.id,

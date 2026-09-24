@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { scoreEpisode, type StatLine } from "@/lib/scoring";
+import { getScoringRules } from "@/lib/scoringRules";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -13,11 +14,14 @@ export default async function ContestantPage({ params }: { params: { id: string 
   const contestant = await db.contestant.findUnique({ where: { id } });
   if (!contestant) notFound();
 
-  const stats = await db.episodeStat.findMany({
-    where: { contestantId: id },
-    include: { episode: true },
-    orderBy: { episode: { number: "asc" } },
-  });
+  const [stats, rules] = await Promise.all([
+    db.episodeStat.findMany({
+      where: { contestantId: id },
+      include: { episode: true },
+      orderBy: { episode: { number: "asc" } },
+    }),
+    getScoringRules(),
+  ]);
 
   const rows = stats.map((s) => {
     const line: StatLine = {
@@ -32,7 +36,7 @@ export default async function ContestantPage({ params }: { params: { id: string 
       wasBooted: s.wasBooted,
       wasImmune: s.wasImmune,
     };
-    return { episodeNumber: s.episode.number, stat: s, points: scoreEpisode(line) };
+    return { episodeNumber: s.episode.number, stat: s, points: scoreEpisode(line, rules) };
   });
   const total = rows.reduce((sum, r) => sum + r.points, 0);
 

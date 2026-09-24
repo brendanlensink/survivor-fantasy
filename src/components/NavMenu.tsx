@@ -35,6 +35,15 @@ function CastIcon({ className }: { className?: string }) {
   );
 }
 
+function ScoringIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.6">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="2" />
+      <path d="M7 9h4M9 7v4M13 9h4M7 15.5l3 0M13 14h4M13 17h4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function AdminIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -52,6 +61,7 @@ const LINKS = [
   { href: "/", label: "Standings", icon: TrophyIcon },
   { href: "/draft", label: "Draft", icon: DraftIcon },
   { href: "/contestants", label: "Cast", icon: CastIcon },
+  { href: "/scoring", label: "Scoring", icon: ScoringIcon },
 ];
 
 const linkClass =

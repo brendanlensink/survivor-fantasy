@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { scoreEpisode, scoreSeason, type StatLine } from "@/lib/scoring";
+import { getScoringRules } from "@/lib/scoringRules";
 import { isDraftLocked } from "@/lib/draftLock";
 import { getCurrentPlayer } from "@/lib/auth";
 
@@ -24,7 +25,10 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
   const viewer = await getCurrentPlayer();
   const canSeePicks = locked || viewer?.id === team.playerId;
 
-  const stats = await db.episodeStat.findMany({ include: { episode: true } });
+  const [stats, rules] = await Promise.all([
+    db.episodeStat.findMany({ include: { episode: true } }),
+    getScoringRules(),
+  ]);
   const statLines: StatLine[] = stats.map((s) => ({
     contestantId: s.contestantId,
     episodeNumber: s.episode.number,
@@ -37,14 +41,14 @@ export default async function TeamPage({ params }: { params: { id: string } }) {
     wasBooted: s.wasBooted,
     wasImmune: s.wasImmune,
   }));
-  const totals = scoreSeason(statLines);
+  const totals = scoreSeason(statLines, rules);
 
   // Per-episode points, for the weekly breakdown table below.
   const episodeNumbers = Array.from(new Set(statLines.map((s) => s.episodeNumber))).sort((a, b) => a - b);
   const pointsByContestantEpisode = new Map<string, Map<number, number>>();
   for (const line of statLines) {
     const byEpisode = pointsByContestantEpisode.get(line.contestantId) ?? new Map<number, number>();
-    byEpisode.set(line.episodeNumber, scoreEpisode(line));
+    byEpisode.set(line.episodeNumber, scoreEpisode(line, rules));
     pointsByContestantEpisode.set(line.contestantId, byEpisode);
   }
 
