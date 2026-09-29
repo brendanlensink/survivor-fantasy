@@ -25,6 +25,7 @@ export default async function AdminTeamsPage() {
               <li key={p.id} className="flex justify-between border-b border-wood-700 py-2 text-sm">
                 <a href={`/admin/teams/${p.id}`} className="text-parchment hover:text-ember transition-colors">
                   {p.name}
+                  {team && <span className="text-parchment-dim"> · {team.name}</span>}
                 </a>
                 <span className="text-parchment-dim">
                   {team ? `${team.contestants.length} picked` : "no team yet"}

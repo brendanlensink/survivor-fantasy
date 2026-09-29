@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { tribeColor } from "@/lib/tribeColors";
+import { TEAM_NAME_MAX_LENGTH, graphemeLength } from "@/lib/teamName";
 
 interface Contestant {
   id: string;
@@ -19,6 +20,7 @@ export default function DraftForm({
   initialWinnerPredictionId,
   initialIdolsPlayedGuess,
   locked,
+  askTeamName,
 }: {
   contestants: Contestant[];
   tribes: string[];
@@ -26,6 +28,9 @@ export default function DraftForm({
   initialWinnerPredictionId: string | null;
   initialIdolsPlayedGuess: number | null;
   locked: boolean;
+  // True until the first save creates the team; after that the name is
+  // edited through TeamNameForm instead.
+  askTeamName: boolean;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set(initialPicks));
@@ -33,6 +38,7 @@ export default function DraftForm({
   const [idolsPlayedGuess, setIdolsPlayedGuess] = useState(
     initialIdolsPlayedGuess !== null ? String(initialIdolsPlayedGuess) : ""
   );
+  const [teamName, setTeamName] = useState("");
   const [status, setStatus] = useState<{ kind: "idle" | "saving" | "error" | "ok"; message?: string }>({
     kind: "idle",
   });
@@ -56,7 +62,8 @@ export default function DraftForm({
     contestants.filter((c) => selected.has(c.id) && c.tribe === tribe).length;
   const rosterComplete = tribes.every((t) => countByTribe(t) === PICKS_PER_TRIBE);
   const idolsGuessValid = idolsPlayedGuess !== "" && Number.isInteger(Number(idolsPlayedGuess)) && Number(idolsPlayedGuess) >= 0;
-  const complete = rosterComplete && !!winnerPredictionId && idolsGuessValid;
+  const teamNameTooLong = askTeamName && graphemeLength(teamName.trim()) > TEAM_NAME_MAX_LENGTH;
+  const complete = rosterComplete && !!winnerPredictionId && idolsGuessValid && !teamNameTooLong;
 
   async function submit() {
     if (!complete) return;
@@ -69,6 +76,7 @@ export default function DraftForm({
         contestantIds: Array.from(selected),
         winnerPredictionId,
         idolsPlayedGuess: Number(idolsPlayedGuess),
+        ...(askTeamName ? { teamName } : {}),
       }),
     });
     const data = await res.json();
@@ -85,6 +93,26 @@ export default function DraftForm({
   return (
     <div className="mt-8 border-t border-wood-600 pt-6">
       <h2 className="font-display text-xl uppercase tracking-wide text-parchment mb-3">Your picks</h2>
+
+      {askTeamName && !locked && (
+        <div className="mb-6 max-w-sm">
+          <label htmlFor="draft-team-name" className="block text-xs font-medium uppercase tracking-wide text-parchment-dim mb-1">
+            Team name
+          </label>
+          <input
+            id="draft-team-name"
+            type="text"
+            className="w-full bg-wood-800 border border-wood-600 rounded px-2 py-1.5 text-parchment"
+            placeholder="Optional, emoji welcome"
+            value={teamName}
+            onChange={(e) => setTeamName(e.target.value)}
+          />
+          <p className="text-parchment-dim text-xs mt-1">Saved with your picks. You can change it any time after that.</p>
+          {teamNameTooLong && (
+            <p className="text-blood text-sm mt-1">Keep it to {TEAM_NAME_MAX_LENGTH} characters or fewer.</p>
+          )}
+        </div>
+      )}
 
       {locked && (
         <p className="text-ember text-sm mb-4 font-medium">Draft is locked — picks can no longer be changed.</p>

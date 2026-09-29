@@ -21,7 +21,10 @@ export default async function AdminTeamEditPage({ params }: { params: { playerId
   return (
     <div>
       <h2 className="font-display text-xl uppercase tracking-wide text-parchment mb-1">{player.name}</h2>
-      <p className="text-parchment-dim text-sm mb-4">{player.email}</p>
+      <p className="text-parchment-dim text-sm mb-4">
+        {team && <>{team.name} · </>}
+        {player.email}
+      </p>
 
       <AdminTeamForm
         playerId={player.id}

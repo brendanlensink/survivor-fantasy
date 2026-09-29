@@ -4,6 +4,7 @@ import { draftLockAt, isDraftLocked, LEAGUE_TIME_ZONE, PICKS_PER_TRIBE } from "@
 
 export const dynamic = "force-dynamic";
 import DraftForm from "@/components/DraftForm";
+import TeamNameForm from "@/components/TeamNameForm";
 import PageHeading from "@/components/PageHeading";
 import AuthButtons from "@/components/AuthButtons";
 
@@ -72,6 +73,9 @@ export default async function DraftPage() {
         </div>
       )}
 
+      {/* Before the first save, the name field lives inside DraftForm. */}
+      {myTeam && <TeamNameForm key={myTeam.id} initialName={myTeam.name} />}
+
       {player && (
         <DraftForm
           contestants={contestantRows}
@@ -80,6 +84,7 @@ export default async function DraftPage() {
           initialWinnerPredictionId={myTeam?.winnerPredictionId ?? null}
           initialIdolsPlayedGuess={myTeam?.idolsPlayedGuess ?? null}
           locked={locked}
+          askTeamName={!myTeam}
         />
       )}
     </div>

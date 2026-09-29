@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getCurrentPlayer } from "@/lib/auth";
 import { isDraftLocked, PICKS_PER_TRIBE } from "@/lib/draftLock";
+import { parseTeamName } from "@/lib/teamName";
 
 // Self-service draft: the signed-in player picks their own roster, no
 // admin/turn order. Rule: exactly PICKS_PER_TRIBE contestants from every
@@ -19,10 +20,11 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const { contestantIds, winnerPredictionId, idolsPlayedGuess } = body as {
+  const { contestantIds, winnerPredictionId, idolsPlayedGuess, teamName } = body as {
     contestantIds?: string[];
     winnerPredictionId?: string;
     idolsPlayedGuess?: number;
+    teamName?: string;
   };
   if (!Array.isArray(contestantIds) || contestantIds.length === 0) {
     return NextResponse.json({ ok: false, error: "contestantIds is required" }, { status: 400 });
@@ -76,6 +78,17 @@ export async function POST(req: Request) {
     );
   }
 
+  // Team name is optional here and only used when this save creates the
+  // team. Renames after that go through /api/team/name.
+  let initialName = `${player.name}'s Team`;
+  if (typeof teamName === "string" && teamName.trim() !== "") {
+    const parsed = parseTeamName(teamName);
+    if (!parsed.ok) {
+      return NextResponse.json({ ok: false, error: parsed.error }, { status: 400 });
+    }
+    initialName = parsed.name;
+  }
+
   const existingTeam = await db.team.findFirst({ where: { playerId: player.id } });
   const team = existingTeam
     ? await db.team.update({
@@ -83,7 +96,7 @@ export async function POST(req: Request) {
         data: { winnerPredictionId, idolsPlayedGuess },
       })
     : await db.team.create({
-        data: { name: `${player.name}'s Team`, playerId: player.id, winnerPredictionId, idolsPlayedGuess },
+        data: { name: initialName, playerId: player.id, winnerPredictionId, idolsPlayedGuess },
       });
 
   // Replace the roster wholesale — simplest correct behavior for re-picking.
