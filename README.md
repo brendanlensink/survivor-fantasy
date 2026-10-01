@@ -44,9 +44,11 @@ local DB, run through a configurable scoring engine.
 - `src/app/api/scrape/route.ts`: an API route that runs the scraper and
   upserts into the DB. Trigger it manually (a button in an admin page, or
   just hitting the URL) for week 1 — wire up Vercel Cron once you trust it.
-  Still a stub (logs what it scraped, doesn't write `EpisodeStat` rows) —
-  the in-season TDT page's exact columns aren't knowable until S51 airs.
-  Until that's wired up, enter stats by hand at `/admin/episodes`.
+  Syncs the latest episode by default, or `?episode=N` for a specific one
+  (`npm run sync -- N` does the same from the command line). TDT's box
+  score has challenges, votes, and tribal attendance; boots come from its
+  vote-count notes. Idols aren't on it, and neither are boots without a vote
+  (fire-making, medevacs, quits), so enter those at `/admin/episodes`.
 - Add a sanity check: bail loudly if the parsed table doesn't have the
   expected column count/headers, per the earlier caveat about depending on
   someone else's static page.

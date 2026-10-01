@@ -3,26 +3,23 @@
  * (Vercel Cron, GitHub Actions schedule, whatever) at this instead of the
  * API route if you'd rather keep scraping out of your web process.
  *
- * Usage: tsx scripts/weekly-sync.ts
+ * Usage: tsx scripts/weekly-sync.ts [episodeNumber]
+ * With no episode number, syncs the latest episode on TDT.
  */
-import { scrapeSeasonTable, seasonInProgressUrl } from "../src/lib/scraper";
+import { syncEpisodeFromTdt } from "../src/lib/episodeSync";
 import { db } from "../src/lib/db";
 
 const SEASON_NUMBER = Number(process.env.SEASON_NUMBER ?? 51);
 
 async function main() {
-  const url = seasonInProgressUrl(SEASON_NUMBER);
-  console.log(`Scraping ${url} ...`);
+  const episodeNumber = process.argv[2] ? Number(process.argv[2]) : undefined;
+  const result = await syncEpisodeFromTdt(SEASON_NUMBER, episodeNumber);
 
-  const result = await scrapeSeasonTable(url);
-  console.log(`Parsed ${result.rows.length} rows, headers:`, result.headers);
-
-  // TODO: once you've confirmed the shape of `result.rows[i].raw` for a
-  // real in-season page, map it into Contestant/Episode/EpisodeStat
-  // upserts here. Left unimplemented deliberately — see api/scrape/route.ts
-  // for the same TODO.
-
-  console.log("Sync complete (data mapping not yet implemented).");
+  console.log(`Synced episode ${result.episodeNumber} from ${result.sourceUrl}`);
+  console.log(`Saved ${result.savedCount} stat rows`);
+  console.log(`Booted: ${result.booted.join(", ") || "nobody (mark by hand if someone left without a vote)"}`);
+  console.log(`Individual immunity: ${result.immune.join(", ") || "nobody"}`);
+  console.log("Idols aren't on TDT's box score, so enter those at /admin/episodes.");
 }
 
 main()
