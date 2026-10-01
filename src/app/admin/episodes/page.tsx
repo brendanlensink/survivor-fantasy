@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import EpisodeStatForm from "@/components/admin/EpisodeStatForm";
+import TdtSyncButton from "@/components/admin/TdtSyncButton";
 
 export const dynamic = "force-dynamic";
 
@@ -52,8 +53,12 @@ export default async function AdminEpisodesPage({
         </a>
       </div>
 
+      <TdtSyncButton key={`sync-${selectedEpisodeNumber}`} episodeNumber={selectedEpisodeNumber} />
+
       <EpisodeStatForm
-        key={selectedEpisodeNumber}
+        // The form copies its stats into state once, so remount it whenever
+        // the saved stats change (e.g. after a TDT sync), not just on a new episode.
+        key={`${selectedEpisodeNumber}:${JSON.stringify(existingStats)}`}
         episodeNumber={selectedEpisodeNumber}
         contestants={contestants.map((c) => ({
           id: c.id,
